@@ -10,6 +10,13 @@ A beautiful real-time weather app built with React. Search any city in the world
 
 ---
 
+
+## 🚀 Live Demo  
+[![Live Demo](https://img.shields.io/badge/View%20Live-Vercel-blue?style=for-the-badge&logo=vercel)](https://samaa-app-ten.vercel.app/)
+
+---
+
+
 ## Features
 
 - **Real-time weather** — live data from the OpenWeatherMap API
