@@ -9,6 +9,7 @@ import {
   IoMdThunderstorm,
   IoMdSearch,
   IoMdLocate,
+  IoMdMoon,
 } from "react-icons/io";
 import {
   BsCloudHaze2Fill,
@@ -26,6 +27,7 @@ import {
   BsSunset,
   BsCompass,
   BsGlobe2,
+  BsCloudMoon,
 } from "react-icons/bs";
 import { TbTemperatureCelsius } from "react-icons/tb";
 import { ImSpinner8 } from "react-icons/im";
@@ -49,6 +51,7 @@ const t = {
     seaLevel: "Sea Level",
     emptyError: "Please enter a city name",
     langLabel: "عربي",
+    localTime: "Local Time",
   },
   ar: {
     searchPlaceholder: "ابحث عن مدينة أو دولة…",
@@ -65,6 +68,7 @@ const t = {
     seaLevel: "مستوى البحر",
     emptyError: "الرجاء إدخال اسم المدينة",
     langLabel: "English",
+    localTime: "التوقيت المحلي",
   },
 };
 
@@ -105,9 +109,12 @@ export const Weather = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestion, setActiveSuggestion] = useState(-1);
+  // live local time for the current city
+  const [localTime, setLocalTime]     = useState(null);
 
-  const debounceRef = useRef(null);
-  const wrapperRef  = useRef(null);
+  const debounceRef   = useRef(null);
+  const wrapperRef    = useRef(null);
+  const clockRef      = useRef(null);
   const tr    = t[lang];
   const isRTL = lang === "ar";
 
@@ -118,7 +125,24 @@ export const Weather = () => {
     document.documentElement.lang = lang;
   }, [lang, isRTL]);
 
-  // ── Auto-dismiss error after 3 s ──────────────────────────────────────────
+  // ── Live local clock for the city ───────────────────────────────────────
+  useEffect(() => {
+    if (!data) return;
+    const tick = () => {
+      const nowUtc = Math.floor(Date.now() / 1000);
+      const local  = new Date((nowUtc + data.timezone) * 1000);
+      let h = local.getUTCHours();
+      const m    = String(local.getUTCMinutes()).padStart(2, "0");
+      const s    = String(local.getUTCSeconds()).padStart(2, "0");
+      const ampm = h >= 12 ? "PM" : "AM";
+      h = h % 12 || 12;
+      setLocalTime(`${h}:${m}:${s} ${ampm}`);
+    };
+    tick();
+    clearInterval(clockRef.current);
+    clockRef.current = setInterval(tick, 1000);
+    return () => clearInterval(clockRef.current);
+  }, [data]);
   useEffect(() => {
     if (!error) return;
     const timer = setTimeout(() => setError(null), 3000);
@@ -256,16 +280,17 @@ export const Weather = () => {
     }
   };
 
-  const getWeatherIcon = (condition) => {
+  const getWeatherIcon = (condition, iconCode) => {
+    const isNight = iconCode && iconCode.endsWith("n");
     switch (condition) {
-      case "Clouds":       return <BsCloudy />;
+      case "Clear":        return isNight ? <IoMdMoon /> : <IoMdSunny />;
+      case "Clouds":       return isNight ? <BsCloudMoon /> : <BsCloudy />;
       case "Haze":         return <BsCloudHaze2Fill />;
       case "Rain":         return <IoMdRainy />;
-      case "Clear":        return <IoMdSunny />;
       case "Drizzle":      return <BsCloudDrizzleFill />;
       case "Snow":         return <IoMdSnow />;
       case "Thunderstorm": return <IoMdThunderstorm />;
-      default:             return <IoMdCloudy />;
+      default:             return isNight ? <IoMdMoon /> : <IoMdCloudy />;
     }
   };
 
@@ -341,10 +366,15 @@ export const Weather = () => {
         <div className={`card ${fetching ? "cardFetching" : ""}`}>
 
           <div className="cardTop">
-            <div className="icon">{getWeatherIcon(data.weather[0].main)}</div>
+            <div className="icon">{getWeatherIcon(data.weather[0].main, data.weather[0].icon)}</div>
             <div className="countryName">
               <h2>{data.name}, {data.sys.country}</h2>
               <span className="date">{formattedDate}</span>
+              {localTime && (
+                <span className="localTime">
+                  🕐 {localTime} <span className="localTimeLabel">{data.name} {tr.localTime}</span>
+                </span>
+              )}
             </div>
           </div>
 
@@ -450,6 +480,9 @@ export const Weather = () => {
           </div>
         </div>
       )}
+
+      {/* ── Footer ── */}
+      <p className="copyright">© 2026 Ahmed Mohamed</p>
     </div>
   );
 };

@@ -1,70 +1,125 @@
-# Getting Started with Create React App
+# Samaa — سماء 🌤️
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A beautiful real-time weather app built with React. Search any city in the world and get live weather data with full Arabic and English language support.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Preview
 
-### `npm start`
+> Glassmorphism card UI · Bilingual (EN / AR) · RTL support · City autocomplete · 12-hour time format
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Features
 
-### `npm test`
+- **Real-time weather** — live data from the OpenWeatherMap API
+- **City autocomplete** — suggestions dropdown as you type, powered by the Geocoding API
+- **Bilingual** — full English and Arabic (عربي) support with one click
+- **RTL layout** — the entire UI flips direction when Arabic is selected
+- **Language persistence** — your language choice is saved in `localStorage`
+- **Detailed stats** — temperature, feels like, min/max, humidity, wind speed & direction, pressure, visibility, cloud cover, sea level, sunrise & sunset
+- **12-hour time format** — sunrise/sunset shown as `6:24 AM` / `7:11 PM`
+- **Smooth UX** — card stays visible while fetching (no layout flash), error toast auto-dismisses after 3 seconds, keyboard navigation in suggestions (↑ ↓ Enter Esc)
+- **Custom favicon & title** — SVG favicon with the Samaa brand, no default CRA assets
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Tech Stack
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| | |
+|---|---|
+| Framework | React 18 |
+| HTTP | Axios |
+| Icons | react-icons (Bootstrap Icons, Ionicons, Tabler) |
+| API | [OpenWeatherMap](https://openweathermap.org/api) — Current Weather + Geocoding |
+| Styling | Plain CSS with glassmorphism, CSS animations, RTL |
+| Deployment | Vercel |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Getting Started
 
-### `npm run eject`
+### 1. Clone the repo
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+git clone https://github.com/your-username/samaa-weather.git
+cd samaa-weather
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 2. Install dependencies
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm install
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 3. Add your API key
 
-## Learn More
+Open `src/component/Weather.jsx` and replace the key at the top:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```js
+const APIKey = "your_openweathermap_api_key";
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Get a free key at [openweathermap.org/api](https://openweathermap.org/api).
 
-### Code Splitting
+### 4. Run locally
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```bash
+npm start
+```
 
-### Analyzing the Bundle Size
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## Build for Production
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+npm run build
+```
 
-### Advanced Configuration
+Output goes to the `/build` folder, ready to deploy.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## Deploy to Vercel
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+The project includes a `vercel.json` config — just connect your GitHub repo on [vercel.com](https://vercel.com) and it deploys automatically on every push.
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Project Structure
+
+```
+src/
+├── component/
+│   ├── Weather.jsx      # Main weather component
+│   └── weather.css      # All styles (glassmorphism, RTL, animations)
+├── App.js
+└── index.js
+public/
+├── favicon.svg          # Custom SVG favicon
+├── index.html           # Updated title & meta
+└── manifest.json        # PWA manifest with Samaa branding
+```
+
+---
+
+## API Usage
+
+This app uses two OpenWeatherMap endpoints:
+
+- **Current Weather** — `api.openweathermap.org/data/2.5/weather`
+- **Geocoding** (city suggestions) — `api.openweathermap.org/geo/1.0/direct`
+
+The free tier is sufficient for personal use (60 calls/min).
+
+---
+
+## License
+
+MIT
+
+---
+
+© 2026 Ahmed Mohamed. All rights reserved.

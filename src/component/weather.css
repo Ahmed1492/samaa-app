@@ -5,6 +5,11 @@
   padding: 0;
 }
 
+html, body {
+  height: 100%;
+  overflow: hidden; /* page itself never scrolls */
+}
+
 /* ── Spinner ── */
 .reloadingIcone {
   font-size: 48px;
@@ -20,14 +25,15 @@
 /* ── Full-page container ── */
 .container {
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1rem;
+  padding: 4rem 1rem 2rem; /* top padding clears the fixed lang button */
   font-family: 'Segoe UI', system-ui, sans-serif;
+  overflow: hidden; /* container itself doesn't scroll */
 }
 
 /* RTL — swap to an Arabic-friendly font */
@@ -266,13 +272,22 @@ html[dir="rtl"] .langToggle {
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 28px;
-  padding: 2rem 2.2rem 2.2rem;
+  padding: 1.4rem 1.8rem 1.6rem;
   color: #fff;
   width: 100%;
   max-width: 420px;
+  max-height: calc(100vh - 120px); /* never taller than viewport minus search bar */
+  overflow-y: auto;
+  overflow-x: hidden;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
   animation: slideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   transition: opacity 0.25s ease;
+  scrollbar-width: none; /* Firefox — hide scrollbar visually */
+}
+
+/* Chrome/Safari — hide scrollbar visually but keep scroll */
+.card::-webkit-scrollbar {
+  display: none;
 }
 
 .card.cardFetching {
@@ -324,11 +339,26 @@ html[dir="rtl"] .langToggle {
   letter-spacing: 0.5px;
 }
 
+.localTime {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.3px;
+  font-variant-numeric: tabular-nums; /* prevents layout shift as seconds tick */
+}
+
+.localTimeLabel {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.45);
+  margin-left: 4px;
+}
+
 /* ── Divider ── */
 .divider {
   height: 1px;
   background: rgba(255, 255, 255, 0.15);
-  margin: 1.2rem 0;
+  margin: 0.8rem 0;
 }
 
 /* ── Card body (temperature) ── */
@@ -337,20 +367,20 @@ html[dir="rtl"] .langToggle {
   align-items: flex-start;
   justify-content: center;
   gap: 2px;
-  margin: 0.5rem 0 0.2rem;
+  margin: 0.2rem 0 0.1rem;
 }
 
 .cardBody .temp {
-  font-size: 96px;
+  font-size: 80px;
   font-weight: 200;
   line-height: 1;
   letter-spacing: -4px;
 }
 
 .cardBody .tempUnit {
-  font-size: 2.2rem;
+  font-size: 2rem;
   font-weight: 300;
-  margin-top: 14px;
+  margin-top: 10px;
   opacity: 0.85;
 }
 
@@ -369,17 +399,17 @@ html[dir="rtl"] .langToggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  margin-top: 1.4rem;
+  margin-top: 0.8rem;
 }
 
 .stat {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 12px 14px;
+  border-radius: 14px;
+  padding: 9px 12px;
   transition: background 0.2s;
 }
 
@@ -443,9 +473,9 @@ html[dir="rtl"] .langToggle {
   justify-content: space-around;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 18px;
-  padding: 14px 20px;
-  margin-bottom: 0.2rem;
+  border-radius: 16px;
+  padding: 10px 16px;
+  margin-bottom: 0.1rem;
 }
 
 .sunItem {
@@ -470,6 +500,20 @@ html[dir="rtl"] .langToggle {
   width: 1px;
   height: 36px;
   background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Copyright footer — fixed, never causes scroll ── */
+.copyright {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
 }
 
 /* ── Hidden / wrong message (legacy, kept for safety) ── */
