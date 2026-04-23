@@ -22,7 +22,4 @@ p {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.notFoundCity {
-  color: red;
-  padding: 20px 0;
-}
+/* notFoundCity styles are handled in weather.css */
